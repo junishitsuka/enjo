@@ -35,7 +35,7 @@ def main():
     for i in range(len(DATA_SET)):
         for j in range(len(DATA_SET)):
             if i >= j: continue
-            f.write('%s,%s,%s,%s,' % (DATA_SET[i], DATA_SET[j], len(userlists[i], len(userlists[j]))))
+            f.write('%s,%s,%s,%s,' % (DATA_SET[i], DATA_SET[j], len(userlists[i]), len(userlists[j])))
             f.write('%d' % int(calc_duplicated_usercount(i, j, userlists)))
             f.write('\n')
 
