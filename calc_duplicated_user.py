@@ -14,10 +14,10 @@ def get_userlists():
     for i in range(len(DATA_SET)):
         data = open('../data/%s/community_userid.csv' % DATA_SET[i], 'r').readlines()
         for j in range(len(data)):
-            if j == 0: continue
+            if j == 0: continue # skip the header line
             d = data[j].split(',')
             for k in range(len(d)):
-                if k > 1: userlists[i].append(d[k])
+                if k > 1: userlists[i].append(d[k]) # skip meaningless elements
     return userlists
 
 def calc_duplicated_usercount(i, j, userlists):
@@ -35,10 +35,7 @@ def main():
     for i in range(len(DATA_SET)):
         for j in range(len(DATA_SET)):
             if i >= j: continue
-            f.write('%s,' % DATA_SET[i])
-            f.write('%s,' % DATA_SET[j])
-            f.write('%s,' % len(userlists[i]))
-            f.write('%s,' % len(userlists[j]))
+            f.write('%s,%s,%s,%s,' % (DATA_SET[i], DATA_SET[j], len(userlists[i], len(userlists[j]))))
             f.write('%d' % int(calc_duplicated_usercount(i, j, userlists)))
             f.write('\n')
 
