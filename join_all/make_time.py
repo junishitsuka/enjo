@@ -18,9 +18,12 @@ def main():
             date = t[0].split('/')
             time = t[1].split(':')
             d = date[0] + '-' + date[1] + '-' + date[2] + ' ' + time[0] + ':' + time[1] + ':' + time[2]
-            sql = 'INSERT INTO enjo_time (topic, time, username) VALUE ("%s", "%s", "%s")' % (topic, d, base[6])
-            cursor.execute(sql)
-            connector.commit()
+            try:
+                sql = 'INSERT INTO enjo_basedata (topic, time, tweet_id, content, link, name, retweet_id, retweet_count) VALUE ("%s", "%s", "%s", "%s", "%s", "%s", "%s", %d)' % (topic, d, base[0], base[3], base[5], base[6], base[7], int(base[10]))
+                cursor.execute(sql)
+                connector.commit()
+            except:
+                print 'error occured'
 
             line = f.readline()
         f.close()
