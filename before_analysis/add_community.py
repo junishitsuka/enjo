@@ -10,10 +10,10 @@ def main():
     cursor = connector.cursor()
 
     for topic in DATA_SET:
-        f = open('../../data/output/before_user_%s.csv' % topic, 'r')
+        f = open('../../data/output/before_nortuser_%s.csv' % topic, 'r')
         text = f.readlines()
         f.close()
-        f = open('../../data/output/before_community_%s.csv' % topic, 'w')
+        f = open('../../data/output/before_nortcommunity_%s.csv' % topic, 'w')
         for line in text:
             users = line.split(',')
             community = []

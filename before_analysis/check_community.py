@@ -10,9 +10,9 @@ def main():
     com = {}
 
     for topic in DATA_SET:
-        community = open('../../data/output/before_community_%s.csv' % topic, 'r').readlines()
+        community = open('../../data/output/before_nortcommunity_%s.csv' % topic, 'r').readlines()
         date = ''
-        f = open('../../data/output/before_count_%s.csv' % topic, 'w')
+        f = open('../../data/output/before_nortcount_%s.csv' % topic, 'w')
         for line in community:
             li = line.split(',')
             date = li[0]
