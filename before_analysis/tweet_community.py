@@ -19,26 +19,28 @@ class tweetcommunity:
         return timelist
 
     # SQLでカウントする関数
-    def count_community(self, timelist, community, tweet_id = '460607471132766208'):
+    def count_community(self, start, time, community, tweet_id = '460607471132766208'):
         dict = {}
-        start = timelist.pop(0)
-        for time in timelist:
-            sql = "select count(*) from enjo_basedata as b left join enjo_users_fixed as u on b.name = u.name where u.spirits_communityid = %d and b.retweet_id = '%s' and time > '%s' and time < '%s' order by time asc;" % (community, tweet_id, start, time)
+
+        for t in time:
+            sql = "select count(*) from enjo_basedata as b left join enjo_users_fixed as u on b.name = u.name where u.spirits_communityid = %d and b.retweet_id = '%s' and time > '%s' and time < '%s' order by time asc;" % (community, tweet_id, start, t)
+            print sql
             self.cursor.execute(sql)
             ret = self.cursor.fetchall()
-            dict[time] = ret[0][0]
+            dict[t] = ret[0][0]
         return dict
 
     def main(self):
         timelist = self.prepare_timelist()
+        start = timelist.pop(0)
         count_community = []
         for i in range(10):
-            count_community.append(self.count_community(timelist, i))
+            count_community.append(self.count_community(start, timelist, i + 1))
 
         f = open('../../data/output/tweet_community.csv', 'w')
-        f.write(','.join([str(x) for x in xrange(11)]))
+        f.write(','.join([str(x) for x in xrange(11)]) + '\n')
         for t in timelist:
-            f.write(t + ',' + ','.join([str(count_community[x][t]) for x in xrange(10)]) + '\n')
+            f.write(t + ',' + ','.join([str(count_community[x][t]) for x in range(10)]) + '\n')
         f.close()
 
 if __name__ == '__main__':
