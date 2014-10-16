@@ -49,9 +49,9 @@ class diffusion:
                 node = next
 
         degree = nx.degree(DG)
-        f = open('degree.txt', 'w')
+        f = open('degree.csv', 'w')
         for k,v in sorted(degree.items(), key=lambda x: x[1], reverse=True):
-            f.write(str(userlist[k]) + ': ' + str(v) + '\n')
+            f.write(str(userlist[k]) + ',' + str(retweet[userlist[k]][0]) + ',' + str(retweet[userlist[k]][3]) + ',' + str(v) + '\n')
         f.close()
 
         nx.draw(DG, node_size=50)
