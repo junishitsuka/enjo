@@ -33,29 +33,33 @@ class diffusion:
         return [c for c in channel if retweet[c][0] > retweet[name][0]]
 
     def main(self):
-        DG = nx.DiGraph()
+        G = nx.Graph()
         retweet = self.gettweet(TWEETID)
         retweet['jyunichidesita'] = (datetime.datetime(2014, 4, 28, 0, 0, 0),) # 炎上ツイートのユーザーのみの対応
         userlist = retweet.keys()
-        node = self.getRTchannel('jyunichidesita', userlist, retweet) # 炎上ツイートをRTし、且つそのツイートのユーザーとリンクのあるユーザーの名前のリスト
+        # node = self.getRTchannel('jyunichidesita', userlist, retweet) # 炎上ツイートをRTし、且つそのツイートのユーザーとリンクのあるユーザーの名前のリスト
+        node = ['reichi062', 'hasiayu', '2nethi', 'NatsukiPydyhgfd', 'soujiro0725', 'Kirokuro', 'Heavymetalskier', 'maiayumio', 'azullechuza', 'hakofuguf']
         while node:
             next = []
             for n in node:
                 tmp = self.getRTchannel(n, userlist, retweet)
                 next.extend(tmp)
                 edges = [(userlist.index(n), userlist.index(x)) for x in tmp]
-                DG.add_edges_from(edges)
+                G.add_edges_from(edges)
             else:
                 node = next
 
-        degree = nx.degree(DG)
-        f = open('degree.csv', 'w')
+        degree = nx.degree(G)
+        close = nx.closeness_centrality(G)
+        bet = nx.betweenness_centrality(G)
+        eigen = nx.eigenvector_centrality(G)
+        f = open('../../data/output/diffusion/centrality.csv', 'w')
         for k,v in sorted(degree.items(), key=lambda x: x[1], reverse=True):
-            f.write(str(userlist[k]) + ',' + str(retweet[userlist[k]][0]) + ',' + str(retweet[userlist[k]][3]) + ',' + str(v) + '\n')
+            f.write(str(userlist[k]) + ',' + str(retweet[userlist[k]][0]) + ',' + str(retweet[userlist[k]][3]) + ',' + str(v) + ',' + str(close[k]) + ',' + str(bet[k]) + ',' + str(eigen[k]) + '\n')
         f.close()
 
-        nx.draw(DG, node_size=50)
-        plt.savefig("path2.png")
+        nx.draw(G, node_size=50)
+        plt.savefig("../../data/output/diffusion/undirected.png")
         plt.show()
 
 if __name__ == '__main__':
