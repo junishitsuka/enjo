@@ -11,8 +11,8 @@ def main():
         line = f.readline() # ignore the header line
         while line:
             user = line.rstrip().split(',')
-            print int(user[1])
             if (int(user[1]) < CLUSTER_MAX_NUMBER): break # clusterのメンバー数がしきい値より下ならループをbreak
+            print str(i+1) + '_' + user[0]
             os.mkdir('../../cluster/community/community_propagation_20140530/Sub/cluster_%d_%s/' % (i + 1, user[0]))
             fw = open('../../cluster/community/community_propagation_20140530/Sub/cluster_%d_%s/userlist.txt' % (i + 1, user[0]), 'w')
             for u in user[2:]:
