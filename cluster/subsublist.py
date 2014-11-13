@@ -4,8 +4,8 @@
 import sys, glob, re
 CLUSTER_MAX_NUMBER = 10000
 
-def create(f, line, sub = 0, subsub = 0):
-    fw = open('../../data/output/subsubcluster.csv', 'a')
+def create(f, line, sub = 0, subsub = 0, subsubsub = 0):
+    fw = open('../../data/output/subsubsubcluster.csv', 'a')
     while line:
         user = line.rstrip().split(',')
         if int(user[1]) < CLUSTER_MAX_NUMBER:
@@ -13,8 +13,10 @@ def create(f, line, sub = 0, subsub = 0):
                 fw.write(user[0] + ',' + user[1] + '\n')
             elif subsub == 0:
                 fw.write(str(sub) + '_' + user[0] + ',' + user[1] + '\n')
-            else:
+            elif subsubsub == 0:
                 fw.write(str(sub) + '_' + str(subsub) + '_' + user[0] + ',' + user[1] + '\n')
+            else:
+                fw.write(str(sub) + '_' + str(subsub) + '_' + str(subsubsub) + '_' + user[0] + ',' + user[1] + '\n')
         line = f.readline()
     fw.close()
 
@@ -36,8 +38,10 @@ def subcluster():
         community = cluster.group().replace('/', '').split('_')
         if len(community) == 2:
             create(f, line, int(community[1]))
-        else:
+        elif len(community) == 3:
             create(f, line, int(community[1]), int(community[2]))
+        else:
+            create(f, line, int(community[1]), int(community[2]), int(community[3]))
 
 def main():
     allcluster()
