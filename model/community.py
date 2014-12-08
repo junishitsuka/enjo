@@ -65,9 +65,9 @@ def main():
                 a = cursor.fetchone()[0] # = n
                 c = 2.0 * a / (n * (n - 1))
 
-                sql = 'update all_users set com_cluster = %f where node_id = "%s"' % (c, u)
-                cursor.execute(sql)
-                connector.commit()
+            sql = 'update all_users set com_cluster = %f where node_id = "%s"' % (c, u)
+            cursor.execute(sql)
+            connector.commit()
 
 if __name__ == '__main__':
     connector = MySQLdb.connect(db="ishitsuka", host="localhost", user="ishitsuka", passwd="ud0nud0n", charset="utf8")
