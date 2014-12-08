@@ -3,12 +3,17 @@ Precision <- 0
 Recall <- 0
 Fvalue <- 0
 
-train <- read.csv('~/Desktop/lab/炎上分析/data/output/train.csv')
+train <- read.csv('~/Desktop/lab/炎上分析/data/output/train_community.csv')
+na.omit(train)
+# train$Cluster <- ifelse(is.na(train$Cluster), mean(train$Cluster, na.rm=TRUE), train$Cluster)
+# train$Degree <- ifelse(is.na(train$Degree), mean(train$Degree, na.rm=TRUE), train$Degree)
 
 plus <- subset(train, Burst == 1)
 minus <- subset(train, Burst == 0)
 minus <- minus[sample(nrow(plus)),]
 train <- rbind(plus, minus)
+
+write.csv(train, '../../data/output/data.csv')
 
 # Randomly shuffle the data
 data<-train[sample(nrow(train)),]
