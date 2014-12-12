@@ -4,7 +4,7 @@
 import MySQLdb, sys
 
 AAS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'new']
-SQL = 'select b.retweet_count, b.name, a.cluster_id, a.cluster_id2, a.cluster_id3, a.cluster_id4, a.node_id from enjo_basedata as b left join all_users as a on b.name = a.name where b.topic = "spirits" and b.retweet_id = "0" and (b.retweet_count >= 10 or b.retweet_count <= 2) and a.cluster_id is NOT NULL order by b.retweet_count desc'
+SQL = 'select b.retweet_count, b.name, a.cluster_id, a.cluster_id2, a.cluster_id3, a.cluster_id4, a.node_id from enjo_basedata as b left join all_users as a on b.name = a.name where b.retweet_id = "0" and (b.retweet_count >= 10 or (b.retweet_count <= 2 and b.retweet_count <> 0)) and a.cluster_id is NOT NULL order by b.retweet_count desc'
 
 def get_tweet(sql):
     cursor.execute(sql)
