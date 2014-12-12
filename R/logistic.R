@@ -1,12 +1,29 @@
+# データフレームを一括スケーリングする関数
+scale_matrix <- function(x) {
+    x_scaled <- x
+    for (i in 1:ncol(x)) {
+        x_scaled[i] <- scale(x[,i])
+    }
+    x_scaled
+}
+
 Accuracy <- 0
 Precision <- 0
 Recall <- 0
 Fvalue <- 0
 
-train <- read.csv('~/Desktop/lab/炎上分析/data/output/train_community.csv')
-na.omit(train)
+train <- read.csv('~/Desktop/lab/炎上分析/data/output/train_zero.csv')
+
+# 欠損値の処理
+train <- na.omit(train)
 # train$Cluster <- ifelse(is.na(train$Cluster), mean(train$Cluster, na.rm=TRUE), train$Cluster)
 # train$Degree <- ifelse(is.na(train$Degree), mean(train$Degree, na.rm=TRUE), train$Degree)
+
+# scaling
+train <- train[,c(1,2,3,4,5,6,7,8,9,10,12,13)]
+train.scaled <- scale_matrix(train)
+train.scaled[,1] <- train[,1]
+train <- train.scaled
 
 plus <- subset(train, Burst == 1)
 minus <- subset(train, Burst == 0)
@@ -28,7 +45,8 @@ for(i in 1:10){
      testData <- data[testIndexes, ]
      trainData <- data[-testIndexes, ]
 
-     train.logistic <- glm(Burst ~ Hashtag + Mention + URL + Length + Reply + Follower + Follow + Favorite + Entry, data = trainData, family = binomial(link = "logit"))
+     # train.logistic <- glm(Burst ~ Hashtag + Mention + URL + Length + Reply + Follower + Follow + Favorite + Entry, data = trainData, family = binomial(link = "logit"))
+     train.logistic <- glm(Burst ~ Hashtag + Mention + URL + Length + Reply + Follower + Follow + Favorite + Entry + Cluster + Degree, data = trainData, family = binomial(link = "logit"))
      pred <- round(predict(train.logistic, testData, type = "response"))
      t <- table(pred, testData[,1])
      accuracy <- (t[1] + t[4]) / sum(t)
