@@ -4,7 +4,14 @@
 import MySQLdb, sys
 
 AAS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'new']
-SQL = 'select b.retweet_count, b.content, a.follower, a.friend, a.favorite, a.entryCount, b.name , au.com_cluster, au.com_degree, au.com_betweenness, au.com_closeness, au.com_eigen, au.com_pagerank, au.com_hub, au.com_authority from enjo_basedata as b left join aas_twitter_com.aas_twitter_com_%s as a on b.name = a.authorId left join all_users as au on au.name = b.name where topic = "spirits" and retweet_id = "0" and a.authorId is NOT NULL and (b.retweet_count >= 10 or (b.retweet_count <= 2 and b.retweet_count <> 0)) order by b.retweet_count desc'
+
+BURST_LIMIT = 10 # 5
+
+# base line
+# SQL = 'select b.retweet_count, b.content, a.follower, a.friend, a.favorite, a.entryCount from enjo_basedata as b left join aas_twitter_com.aas_twitter_com_%s as a on b.name = a.authorId left join all_users as au on au.name = b.name where topic = "spirits" and retweet_id = "0" and a.authorId is NOT NULL and (b.retweet_count >= ' + str(BURST_LIMIT) +  ' or (b.retweet_count <= 2 and b.retweet_count <> 0)) order by b.retweet_count desc'
+
+# proposal method
+SQL = 'select b.retweet_count, b.content, a.follower, a.friend, a.favorite, a.entryCount, au.com_cluster, au.com_degree, au.com_betweenness, au.com_closeness, au.com_eigen, au.com_pagerank, au.com_hub, au.com_authority from enjo_basedata as b left join aas_twitter_com.aas_twitter_com_%s as a on b.name = a.authorId left join all_users as au on au.name = b.name where topic = "spirits" and retweet_id = "0" and a.authorId is NOT NULL and (b.retweet_count >= ' + str(BURST_LIMIT) +  ' or (b.retweet_count <= 2 and b.retweet_count <> 0)) order by b.retweet_count desc'
 
 def get_tweet(sql):
     cursor.execute(sql)
@@ -29,7 +36,8 @@ def output(t):
 
 def main():
     f = open('train.csv', 'w')
-    f.write('Burst,Hashtag,Mention,URL,Length,Reply,Follower,Follow,Favorite,Entry,Name,Cluster,Degree,Betweenness,Closeness,Eigen,Pagerank,Hub,Authority\n')
+    # f.write('Burst,Hashtag,Mention,URL,Length,Reply,Follower,Follow,Favorite,Entry\n')
+    f.write('Burst,Hashtag,Mention,URL,Length,Reply,Follower,Follow,Favorite,Entry,Cluster,Degree,Betweenness,Closeness,Eigen,Pagerank,Hub,Authority\n')
     for aas in AAS:
         tweets = get_tweet(SQL % aas)
         for t in tweets:
