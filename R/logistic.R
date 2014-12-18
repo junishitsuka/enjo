@@ -42,26 +42,26 @@ Precision <- 0
 Recall <- 0
 Fvalue <- 0
 
-train <- read.csv('~/Desktop/lab/炎上分析/data/output/train.csv')
+train <- read.csv('~/Desktop/lab/炎上分析/data/output/train/train_10/train_10_naomit_sampled.csv')
 
 # 欠損値の処理
-train <- na.omit(train)
+# train <- na.omit(train)
 # train$Cluster <- ifelse(is.na(train$Cluster), mean(train$Cluster, na.rm=TRUE), train$Cluster)
 # train$Degree <- ifelse(is.na(train$Degree), mean(train$Degree, na.rm=TRUE), train$Degree)
 
 # scaling
-train <- train[,-c(11)]
+# train <- train[,-c(11)]
 train.scaled <- scale_matrix(train)
 train.scaled[,1] <- as.factor(train[,1])
-train <- train.scaled
+data <- train.scaled
 
-plus <- subset(train, Burst == 1)
-minus <- subset(train, Burst == 0)
-minus <- minus[sample(nrow(plus)),]
-train <- rbind(plus, minus)
+# plus <- subset(train, Burst == 1)
+# minus <- subset(train, Burst == 0)
+# minus <- minus[sample(nrow(plus)),]
+# train <- rbind(plus, minus)
 
 # Randomly shuffle the data
-data<-train[sample(nrow(train)),]
+# data<-train[sample(nrow(train)),]
 
 # Create 10 equally size folds
 folds <- cut(seq(1, nrow(data)), breaks = 10, labels = FALSE)
@@ -73,7 +73,7 @@ for(i in 1:10){
      testData <- data[testIndexes, ]
      trainData <- data[-testIndexes, ]
 
-     pred <- libsvm(trainData, testData)
+     pred <- logistic(trainData, testData)
      t <- table(pred, testData[,1])
      accuracy <- (t[1] + t[4]) / sum(t)
      precision <- t[4] / (t[2] + t[4])
