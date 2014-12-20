@@ -51,7 +51,8 @@ def main():
 
             n = len(all_edges1) + len(all_edges2) 
 
-            sql = 'update all_users set com_degree = %d where node_id = "%s"' % (n, u)
+            sql = 'update all_users set com_degree = %d, community_id = "%s" where node_id = "%s"' % (n, k, u)
+            print sql
             cursor.execute(sql)
             connector.commit()
 
