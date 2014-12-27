@@ -6,9 +6,10 @@ import numpy as np
 from scipy import io, sparse
 from scipy.sparse.linalg import svds
 
-NUM = 100 # 圧縮次元数
+NUM = int(sys.argv[2]) # 圧縮次元数
 WORD_HEAD = 19
-FILE = '../../libsvm/train/train_5/train_5_naomit_sampled.csv'
+INFILE = sys.argv[1] + '.sampled'
+OUTFILE = sys.argv[1] + '.svd'
 
 def make_matrix(f_name):
     f = open(f_name, 'r')
@@ -30,17 +31,23 @@ def make_matrix(f_name):
     return matrix
 
 def decomp_dim(num):
-    matrix = make_matrix(FILE)
-    f_write = open('result.txt', 'w')
-    for l in matrix.todense():
-        for r in l:
-            f_write.write('%s,' % r)
-        f_write.write('\n')
+    matrix = make_matrix(INFILE)
     return svds(matrix, k=num)[0]
 
 def main():
     result = decomp_dim(NUM)
-    np.savetxt("result.csv", result, delimiter=",")
+    f = open(INFILE, 'r')
+    fw = open(OUTFILE, 'w')
+    line = f.readline()
+    line = f.readline() # skip header
+    for r in result:
+        t = line.split(',')
+        print r
+        tmp = []
+        tmp.extend(t[:18])
+        tmp.extend([str(i) for i in r])
+        fw.write('%s\n' % ','.join(tmp))
+        line = f.readline()
 
 if __name__ == '__main__':
     main()
