@@ -24,11 +24,12 @@ def random_sampling(plus, minus):
 
 def main():
     data = pd.read_csv(FILE)
-    data = data.dropna() # 欠損値を除去
+    # data = data.dropna() # 欠損値を除去
     plus = data[data["0"] == 1]
     minus = data[data["0"] == 0]
-    data_sampled = random_sampling(plus, minus)
-    data_sampled.to_csv('%s.sampled' % FILE, index=False)
+    for i in range(10):
+        data_sampled = random_sampling(plus, minus)
+        data_sampled.to_csv('../../data/output/namapo/train_%d.sampled' % (i + 1), index=False)
 
 if __name__ == '__main__':
     main()

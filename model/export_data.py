@@ -13,7 +13,7 @@ FEATURE = 11124 # 18 word: 11106
 # SQL = 'select b.retweet_count, b.content, a.follower, a.friend, a.favorite, a.entryCount from enjo_basedata as b left join aas_twitter_com.aas_twitter_com_%s as a on b.name = a.authorId left join all_users as au on au.name = b.name where retweet_id = "0" and a.authorId is NOT NULL and (b.retweet_count >= ' + str(BURST_LIMIT) +  ' or (b.retweet_count <= 2 and b.retweet_count <> 0)) order by b.retweet_count desc'
 
 # proposal method
-SQL = 'select b.retweet_count, b.content, a.follower, a.friend, a.favorite, a.entryCount, au.com_cluster, au.com_degree, au.com_betweenness, au.com_closeness, au.com_eigen, au.com_pagerank, au.com_hub, au.com_authority, c.member_num, c.word from enjo_basedata as b left join aas_twitter_com.aas_twitter_com_%s as a on b.name = a.authorId left join all_users as au on au.name = b.name left join all_communities as c on c.community_id = au.community_id  where retweet_id = "0" and a.authorId is NOT NULL and (b.retweet_count >= ' + str(BURST_LIMIT) +  ' or (b.retweet_count <= 2 and b.retweet_count <> 0)) order by b.retweet_count desc limit 10'
+SQL = 'select b.retweet_count, b.content, a.follower, a.friend, a.favorite, a.entryCount, au.com_cluster, au.com_degree, au.com_betweenness, au.com_closeness, au.com_eigen, au.com_pagerank, au.com_hub, au.com_authority, c.member_num, c.word from enjo_basedata as b left join aas_twitter_com.aas_twitter_com_%s as a on b.name = a.authorId left join all_users as au on au.name = b.name left join all_communities as c on c.community_id = au.community_id  where topic = "kenketsu" and retweet_id = "0" and a.authorId is NOT NULL and (b.retweet_count >= ' + str(BURST_LIMIT) +  ' or (b.retweet_count <= 2 and b.retweet_count <> 0)) order by b.retweet_count desc'
 
 def get_tweet(sql):
     cursor.execute(sql)
@@ -21,17 +21,17 @@ def get_tweet(sql):
 
 def output(t):
     output = []
-    if t[0] >= BURST_LIMIT:
-        output.append('1')
-    else:
-        output.append('0')
+    # if t[0] >= BURST_LIMIT:
+    #     output.append('1')
+    # else:
+    #     output.append('0')
+    output.append(t[0])
     output.append(str(t[1].count('#')))
     output.append(str(t[1].count('http')))
     output.append(str(t[1].count('@')))
     output.append(str(len(t[1])))
-    if t[1] != '':
-        if t[1][0] == '@':
-            output.append('1')
+    if t[1] != '' and t[1][0] == '@':
+        output.append('1')
     else:
         output.append('0')
     output.extend([str(x) for x in t[2:]])
